@@ -1,0 +1,90 @@
+
+Scholen bestaan ten einde leerlingen vak-inhoudelijke kennis bij te brengen. Hiervoor worden leraren aangetrokken om deze kennis over te dragen. Leerlingen worden per vak georganiseerd in klassen, met inachtneming van schoolniveau en jaarlaag. Om de kennis van leerlingen te kunnen bepalen, worden er toetsen afgenomen. Derhalve zijn de entiteiten in dit datamodel zijn:
+
+	leerlingen
+	leraren
+	vakken
+	klassen
+	toetsen
+
+Leerlingen
+
+In het onderwijs hoort de leerling centraal te staan, zonder leerlingen geen school. De leerlingenadministratie dient de gegevens van individuele leerlingen te registreren en eventuele wijzigingen te verwerken. Uit de vast te leggen gegevens, volgen de bijbehorende attributen:
+
+	Voor- en achternaam
+	Geboortedatum
+	Adres
+	Telefoonnummer
+	Leerlingnummer: uniek id-nummer om leerlingen eenduidig te onderscheiden
+	School niveau: vmbo, havo, vwo
+	Jaarlaag
+
+Aangezien leerlingen doorgaans meerdere vakken volgen, en verschillende leerlingen een uiteenlopend aantal vakken hebben, is gekozen om vakkenpakket niet als attribuut op te nemen.
+
+Leraren
+
+Hoewel leerlingen in theorie door middel van zelfstudie zich kennis zouden kunnen eigen maken, leert de parktijk dat goede begeleiding door een bekwame docent essentieel is. Ook voor leraren dient de personeelsadministratie de nodige gegevens bij te houden en geeft aanleiding tot de volgende attributen:
+
+	Voor- en achternaam
+	Geboortedatum
+	Adres
+	Telefoonnumer
+	Personeelsnummer
+	(salaris)
+
+Salaris is vanuit arbeidsrechtelijk perspectief een belangrijk aspect en zal om die reden wel opgenomen moeten worden in de administratie. Doch dit is in tegenstelling tot, bijvoorbeeld, het nievau en jaarlaag van een leerling niet relevant voor het onderwijsproces als zodanig.
+
+Vakken
+
+Een vak is een programma van over te dragen kennis. Voor de administratie is de inhoud van het lesprogramma irrelevant, zodoende kan voor deze entiteit worden volstaan met een enkel atribuut:
+
+	Naam of ID: Frans, biologie etc.
+
+Klassen
+
+Een klas is een groep van leerlingen die gezamelijk een vak volgt onder begeleiding van een vakdocent. Aangezien de inhoud van een vak afhangt van het niveau en jaar van de leerlingen, worden klassen in de regel samengesteld op basis van deze attributen:
+
+	Niveau
+	Jaarlaag
+	klas-ID: bijv. 6VWO2FR (voor de 2e 6VWO klas Frans)
+
+In dit model negeren we het concept stamklassen. De reden hiervoor is dat scholen onderling verschillen in hoe stamklassen worden samengesteld en deze ook per jaar kan verschillen binnen een school. Ook het profielstelsel (sectoren op het VMBO) wordt in dit model genegeert (zie onder).
+
+Toetsen
+
+Om de vorderingen van leerlingen te kunnen meten, geven leraren toetsen. Hierbij wordt het begrip toets ruim opgevat zodat het proefwerken, werkstukken e.d. kan omvatten. Diverse toetsen moeten van elkaar kunnen worden onderscheiden, eveneens dient van iedere toets een weegfactor bekend tzijn (noodzakelijk voor de berekening van het eindcijfer), het niveau en jaarlaag van de toets. Daarom zijn de attributen:
+
+	Toets-id
+	Weging
+	Niveau
+	Jaarlaag
+
+Relaties
+
+Leerling-Vak: leerlingen volgen vakken en deze relatie vormt de basis van het schoolsysteem. Aangezien leerlingen meerdere vakken volgen en vakken door meerdere leerlingen gevold kunnen worden, is de maximale kardinaliteit in beide kanten n. Echter een leerling volgt ten minste 1 vak, terwijl een vak mogelijk geen leerlingen kent, derhalve is de minimale kardinaliteit 1 resp. 0.
+
+Leraar-Vak: een leraar geeft ten minste 1 vak, doch mogelijk meer (denk aan een docent Grieks en Latijn), derhalve geeft dit een 1,n kardinaliteit. Aan de andere kant, kunnen er meerdere docenten voor een vak zijn, maar ook bestaat de mogelijkheid dat er geen docent bechikbaar is. Hieruit volgt een 0,n kardinaliteit.
+
+Mentoraat: iedere leerling heeft 1 en slechts 1 mentor, dus is de kardinaliteit hier 1,1. Echter een leraar kan geen of meerdere mentorleerlingen hebben en aan deze zijde is de kardinaliteit dan ook 0,n.
+
+Leerling-Klas: leerlingen zitten, in dit model, in evenveel klassen als zij vakken volgen. Verder zit in een klas tenminste 1 leerling. Daarom is in beide gevallen de kardinaliteit 1,n.
+
+Leraar-Klas: een leraar heeft ten minste 1 klas, maar doorgaans meerdere. Een klas heeft daarentegen slechts een klas 1 leraar. Daarom zijn de kardinaliteiten 1,n resp. 1,1.
+
+Vak-Klas: een vak kan aan meerdere klassen gegeven worden doch in geval van leerling ook aan geen. Echter in dit model hoort een klas slechts steeds bij 1 vak. Daarom zijn de kardinaliteiten hier 0,n resp. 1,1.
+
+Leerling-Toets: leerlingen maken toetsen om hun voortgang te meten. Echter niet alle vakken kennen toetsen (bijv. lichamelijke opvoeding) en in theorie is het mogelijk dat een leerling geen toets maakt. Echter een toets wordt door tenministe 1 leerling gemaakt. Daarom zijn de kardinaliteiten hier 0,n resp. 1,n. Aangezien per toets een cijfer wordt toegekend, wordt aan deze relatie een enkel attribuut cijfer toegekend.
+
+Leraar-Toets: de vakdocent is verantwoordelijk voor het afnemen van toetsen (het opstellen en nakijken). Ook hier geldt dat niet elk vak toetsen kent en dat elke toets onder 1 docent valt. Dit geeft de kardinaliteiten 0,n en 1,1. respectievelijk.
+
+Vak-Toets: niet alle vakken hebben toetsen en een vak heeft doorgaans meerdere toetsen. Echter een toets hoort bij slechts 1 vak. Dit geeft de resp. kardinaliteiten 0,n en 1,1.
+
+Overige opmerkingen
+
+In dit model wordt het eindcijfer per vak van een leerling niet geregistreerd. Echter dit cijfer kan worden berekend aan de hand van de resultaten van gemaakte toetsen, met gebruikmaking van de wegingsfactoren.
+
+Dit datamodel houdt geen rekening met eventuele misdragingen van leerling (spijbelen, huiswerk niet maken, etc.). Hoewel het eenvoudig is de administratie van overtredingen in het model op te nemen, is hier niet voor gekozen. Dit hangt samen met feit dat scholen verschillend omgaan met overtredingen en de verantwoordelijk van het opleggen van sancties niet eenduidig is vastgelegd (d.w.z. varieert van school tot school en zelf per docent).
+
+Indien een schoolleiding er voor zou kiezen om overtreding wel op te nemen in de schooladministratie, zal zij er op moeten toezien dat er sprake is van een eenduidig protocol ten aanzien van wangedrag en sancties en dat alle docenten dit consistent toepassen. Zo niet heeft de opname van overtredingen in het datamodel geen toegevoegde waarde.
+
+Verder zijn oud-leerlingen en voormalige docenten niet opgenomen in dit datamodel.
